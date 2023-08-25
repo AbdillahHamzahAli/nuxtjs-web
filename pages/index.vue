@@ -1,19 +1,26 @@
 <template>
-  <div class="py-4">
-    <div class="container">
-      <div class="title border-bottom">
-        <h5>Task</h5>
-      </div>
-      <div class="list-task">
-        <div
-          class="item-task d-flex align-items-center border-bottom pt-3 pb-4"
+  <div class="container my-5">
+    <div class="text-center rounded-3">
+      <img
+        :src="require(`~/assets/img/books.png`)"
+        alt="Logo"
+        width="80"
+        height="80"
+        class="align-text-top"
+      />
+      <h1 class="text-body-emphasis">We Library</h1>
+      <p class="col-lg-8 mx-auto fs-5 text-muted">
+        Temukan dunia buku melalui mata kesimpulan kami. Kami menghubungkan Anda
+        dengan hikmah dan keindahan dari setiap buku. Mari bersama-sama
+        menjelajahi halaman demi halaman pengetahuan dan imajinasi.
+      </p>
+      <div class="d-inline-flex gap-2 mb-5">
+        <button
+          class="btn btn-outline-secondary btn-lg px-4 rounded-pill"
+          type="button"
         >
-          <input id="task" type="checkbox" name="status" class="me-2" />
-          <div class="title-task">Tugas 1</div>
-        </div>
-      </div>
-      <div class="action py-2">
-        <a href="#" class="add-button">Add Task</a>
+          We Books
+        </button>
       </div>
     </div>
   </div>
@@ -21,4 +28,12 @@
 <script>
 export default {}
 </script>
-<style></style>
+<style>
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('~assets/fonts/DMSans-Regular.ttf') format('truetype');
+}
+</style>
