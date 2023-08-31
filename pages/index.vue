@@ -1,39 +1,79 @@
 <template>
-  <div class="container my-5">
-    <div class="text-center rounded-3">
-      <img
-        :src="require(`~/assets/img/books.png`)"
-        alt="Logo"
-        width="80"
-        height="80"
-        class="align-text-top"
-      />
-      <h1 class="text-body-emphasis">We Library</h1>
-      <p class="col-lg-8 mx-auto fs-5 text-muted">
-        Temukan dunia buku melalui mata kesimpulan kami. Kami menghubungkan Anda
-        dengan hikmah dan keindahan dari setiap buku. Mari bersama-sama
-        menjelajahi halaman demi halaman pengetahuan dan imajinasi.
-      </p>
-      <div class="d-inline-flex gap-2 mb-5">
-        <button
-          class="btn btn-outline-secondary btn-lg px-4 rounded-pill"
-          type="button"
+  <div class="py-4">
+    <div class="container">
+      <div class="title border-bottom">
+        <h5>Task</h5>
+      </div>
+      <div class="list-task">
+        <div class="item-task d-flex align-items-start border-bottom pt-3 pb-4">
+          <input
+            id="task"
+            type="checkbox"
+            name="status"
+            class="me-2 mt-2"
+            :checked="tasks[0].isDone"
+          />
+          <div class="d-flex flex-column">
+            <div class="title-task mb-1">
+              {{ tasks[0].title }}
+            </div>
+            <div class="description-task small text-muted">
+              {{ tasks[0].description }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="action py-2">
+        <a
+          v-if="!isCreating"
+          href="#"
+          class="add-button"
+          @click="isCreating = !isCreating"
+          >Add Task</a
         >
-          We Books
-        </button>
+        <div v-else class="add-card">
+          <div class="card mb-2">
+            <div class="card-body d-flex flex-column p-0">
+              <input
+                class="form-control border-0 mb-2"
+                placeholder="Title"
+                type="text"
+              />
+              <textarea
+                class="form-control border-0 small"
+                placeholder="Description"
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+          <div class="button-wrapper d-flex">
+            <button class="btn btn-primary me-2">Save</button>
+            <button
+              class="btn btn-outline-secondary"
+              @click="isCreating = !isCreating"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-export default {}
-</script>
-<style>
-@font-face {
-  font-family: 'DM Sans';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('~assets/fonts/DMSans-Regular.ttf') format('truetype');
+export default {
+  data() {
+    return {
+      tasks: [
+        {
+          title: 'Task 1',
+          description: 'ini deskripsi',
+          isDone: false,
+        },
+      ],
+      isCreating: false,
+    }
+  },
 }
-</style>
+</script>
+<style></style>
