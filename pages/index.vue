@@ -5,101 +5,36 @@
         class="title border-bottom d-flex align-items-center justify-content-between py-2"
       >
         <h5>Task</h5>
-        <div class="d-flex align-items">
-          <span class="me-2">View as</span>
-          <button
-            class="btn btn-outline-secondary py-1 px-3"
-            @click="isGrid = !isGrid"
-          >
-            {{ isGrid ? 'Grid' : 'List' }}
-          </button>
+
+        <div class="d-flex align-items-center ms-auto">
+          <input
+            v-model="searchQuery"
+            type="text"
+            class="form-control"
+            placeholder="Search"
+          />
+
+          <div class="d-flex align-items-center justify-content-end w-100">
+            <span class="me-2">View As</span>
+            <button
+              class="btn btn-outline-secondary py-1 px-3"
+              @click="isGrid = !isGrid"
+            >
+              {{ isGrid ? 'Grid' : 'List' }}
+            </button>
+          </div>
         </div>
       </div>
       <div class="list-task row">
-        <div
-          :class="[
-            'item-task d-flex align-items-start border-bottom pt-3 pb-4',
-            isGrid ? 'col-12 col-md-6 col-lg-4' : 'col-12',
-          ]"
-        >
-          <input
-            id="task"
-            v-model="tasks[0].isDone"
-            type="checkbox"
-            name="status"
-            class="me-2 mt-2"
-            :checked="tasks[0].isDone"
-          />
-          <div
-            :class="[
-              'd-flex flex-column',
-              tasks[0].isDone ? 'text-decoration-line-through fst-italic' : '',
-            ]"
-          >
-            <div class="title-task mb-1">
-              {{ tasks[0].title }}
-            </div>
-            <div class="description-task small text-muted">
-              {{ tasks[0].description }}
-            </div>
-          </div>
-        </div>
-        <div
-          :class="[
-            'item-task d-flex align-items-start border-bottom pt-3 pb-4',
-            isGrid ? 'col-12 col-md-6 col-lg-4' : 'col-12',
-          ]"
-        >
-          <input
-            id="task"
-            v-model="tasks[1].isDone"
-            type="checkbox"
-            name="status"
-            class="me-2 mt-2"
-            :checked="tasks[1].isDone"
-          />
-          <div
-            :class="[
-              'd-flex flex-column',
-              tasks[1].isDone ? 'text-decoration-line-through fst-italic' : '',
-            ]"
-          >
-            <div class="title-task mb-1">
-              {{ tasks[1].title }}
-            </div>
-            <div class="description-task small text-muted">
-              {{ tasks[1].description }}
-            </div>
-          </div>
-        </div>
-        <div
-          :class="[
-            'item-task d-flex align-items-start border-bottom pt-3 pb-4',
-            isGrid ? 'col-12 col-md-6 col-lg-4' : 'col-12',
-          ]"
-        >
-          <input
-            id="task"
-            v-model="tasks[2].isDone"
-            type="checkbox"
-            name="status"
-            class="me-2 mt-2"
-            :checked="tasks[2].isDone"
-          />
-          <div
-            :class="[
-              'd-flex flex-column',
-              tasks[2].isDone ? 'text-decoration-line-through fst-italic' : '',
-            ]"
-          >
-            <div class="title-task mb-1">
-              {{ tasks[2].title }}
-            </div>
-            <div class="description-task small text-muted">
-              {{ tasks[2].description }}
-            </div>
-          </div>
-        </div>
+        <!-- <CardItem :task="task[0]" :isGrid="isGrid" />
+        <CardItem :task="task[1]" :isGrid="isGrid" />
+        <CardItem :task="task[2]" :isGrid="isGrid" /> -->
+        <CardItem
+          v-for="(item, i) in resultQuery"
+          :key="i"
+          :task="item"
+          :isGrid="isGrid"
+        />
       </div>
       <div class="action py-2">
         <a
@@ -139,7 +74,15 @@
   </div>
 </template>
 <script>
+import CardItem from '@/components/Card/CardItem.vue'
 export default {
+  components: {
+    CardItem,
+  },
+  layout(context) {
+    return 'default'
+  },
+
   data() {
     return {
       tasks: [
@@ -147,21 +90,40 @@ export default {
           title: 'Task 1',
           description: 'ini deskripsi 1',
           isDone: false,
+          category: 'Hard',
         },
         {
           title: 'Task 2',
           description: 'ini deskripsi 2',
           isDone: false,
+          category: 'Medium',
         },
         {
           title: 'Task 3',
           description: 'ini deskripsi 3',
           isDone: false,
+          category: 'Eazy',
         },
       ],
       isCreating: false,
       isGrid: false,
+      searchQuery: '',
     }
+  },
+  computed: {
+    resultQuery() {
+      if (this.searchQuery) {
+        return this.tasks.filter((item) => {
+          return this.searchQuery
+            .toLowerCase()
+            .split(' ')
+            .every((v) => item.title.toLowerCase().includes(v))
+        })
+      } else {
+        // console.log(this.tasks)
+        return this.tasks
+      }
+    },
   },
 }
 </script>
