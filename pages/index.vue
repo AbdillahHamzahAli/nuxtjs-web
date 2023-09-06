@@ -5,6 +5,9 @@
         class="title border-bottom d-flex align-items-center justify-content-between py-2"
       >
         <h5>Task</h5>
+        <h5 class="ms-2">
+          Category : {{ categoryQuery === '' ? 'All' : categoryQuery }}
+        </h5>
 
         <div class="d-flex align-items-center ms-auto">
           <input
@@ -13,6 +16,51 @@
             class="form-control"
             placeholder="Search"
           />
+          <div class="ms-2 dropdown">
+            <button
+              class="btn btn-secondary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Category
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <button
+                  class="dropdown-item py-1 px-3"
+                  @click="categoryQuery = 'Hard'"
+                >
+                  Hard
+                </button>
+              </li>
+              <li>
+                <button
+                  class="dropdown-item py-1 px-3"
+                  @click="categoryQuery = 'Medium'"
+                >
+                  Medium
+                </button>
+              </li>
+              <li>
+                <button
+                  class="dropdown-item py-1 px-3"
+                  @click="categoryQuery = 'Eazy'"
+                >
+                  Eazy
+                </button>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <button
+                  class="dropdown-item py-1 px-3"
+                  @click="categoryQuery = ''"
+                >
+                  All
+                </button>
+              </li>
+            </ul>
+          </div>
 
           <div class="d-flex align-items-center justify-content-end w-100">
             <span class="me-2">View As</span>
@@ -104,25 +152,67 @@ export default {
           isDone: false,
           category: 'Eazy',
         },
+        {
+          title: 'Task 4',
+          description: 'ini deskripsi 4',
+          isDone: false,
+          category: 'Medium',
+        },
+        {
+          title: 'Task 5',
+          description: 'ini deskripsi 5',
+          isDone: false,
+          category: 'Eazy',
+        },
+        {
+          title: 'Task 6',
+          description: 'ini deskripsi 6',
+          isDone: false,
+          category: 'Hard',
+        },
       ],
       isCreating: false,
       isGrid: false,
       searchQuery: '',
+      categoryQuery: '',
     }
   },
   computed: {
+    // resultQuery() {
+    //   if (this.searchQuery || this.categoryQuery) {
+    //     return this.tasks
+    //       .filter((item) => {
+    //         return this.searchQuery
+    //           .toLowerCase()
+    //           .split(' ')
+    //           .every((v) => item.title.toLowerCase().includes(v))
+    //       })
+    //       .filter((item) => {
+    //         return (
+    //           item.category.toLowerCase() ===
+    //             this.categoryQuery.toLowerCase() || this.categoryQuery === ''
+    //         )
+    //       })
+    //   } else {
+    //     // console.log(this.tasks)
+    //     return this.tasks
+    //   }
+    // },
     resultQuery() {
-      if (this.searchQuery) {
-        return this.tasks.filter((item) => {
-          return this.searchQuery
-            .toLowerCase()
-            .split(' ')
-            .every((v) => item.title.toLowerCase().includes(v))
-        })
-      } else {
-        // console.log(this.tasks)
-        return this.tasks
-      }
+      return this.tasks.filter((item) => {
+        const titleContainsKeywords = this.searchQuery
+          .toLowerCase()
+          .split(' ')
+          .every((v) => item.title.toLowerCase().includes(v))
+
+        const categoryMatches =
+          item.category.toLowerCase() === this.categoryQuery.toLowerCase() ||
+          this.categoryQuery === ''
+
+        return this.searchQuery || this.categoryQuery
+          ? titleContainsKeywords && categoryMatches
+          : true
+      })
     },
   },
 }
