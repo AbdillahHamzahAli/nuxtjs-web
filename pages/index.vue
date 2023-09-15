@@ -73,10 +73,14 @@
           </div>
         </div>
       </div>
-      <div class="list-task row">
-        <!-- <CardItem :task="task[0]" :isGrid="isGrid" />
-        <CardItem :task="task[1]" :isGrid="isGrid" />
-        <CardItem :task="task[2]" :isGrid="isGrid" /> -->
+      <!-- Tasks -->
+      <div v-if="loading" class="text-center m-5">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <div v-else class="list-task row">
         <CardItem
           v-for="(item, i) in resultQuery"
           :key="i"
@@ -84,6 +88,7 @@
           :isGrid="isGrid"
         />
       </div>
+      <!-- Tasks -->
       <div class="action py-2">
         <a
           v-if="!isCreating"
@@ -133,7 +138,38 @@ export default {
 
   data() {
     return {
-      tasks: [
+      tasks: [],
+      isCreating: false,
+      isGrid: false,
+      searchQuery: '',
+      categoryQuery: '',
+      loading: '',
+    }
+  },
+  computed: {
+    resultQuery() {
+      return this.tasks.filter((item) => {
+        const titleContainsKeywords = this.searchQuery
+          .toLowerCase()
+          .split(' ')
+          .every((v) => item.title.toLowerCase().includes(v))
+
+        const categoryMatches =
+          item.category.toLowerCase() === this.categoryQuery.toLowerCase() ||
+          this.categoryQuery === ''
+
+        return this.searchQuery || this.categoryQuery
+          ? titleContainsKeywords && categoryMatches
+          : true
+      })
+    },
+  },
+  created() {
+    this.loading = true
+  },
+  mounted() {
+    setTimeout(() => {
+      this.tasks = [
         {
           title: 'Task 1',
           description: 'ini deskripsi 1',
@@ -170,50 +206,9 @@ export default {
           isDone: false,
           category: 'Hard',
         },
-      ],
-      isCreating: false,
-      isGrid: false,
-      searchQuery: '',
-      categoryQuery: '',
-    }
-  },
-  computed: {
-    // resultQuery() {
-    //   if (this.searchQuery || this.categoryQuery) {
-    //     return this.tasks
-    //       .filter((item) => {
-    //         return this.searchQuery
-    //           .toLowerCase()
-    //           .split(' ')
-    //           .every((v) => item.title.toLowerCase().includes(v))
-    //       })
-    //       .filter((item) => {
-    //         return (
-    //           item.category.toLowerCase() ===
-    //             this.categoryQuery.toLowerCase() || this.categoryQuery === ''
-    //         )
-    //       })
-    //   } else {
-    //     // console.log(this.tasks)
-    //     return this.tasks
-    //   }
-    // },
-    resultQuery() {
-      return this.tasks.filter((item) => {
-        const titleContainsKeywords = this.searchQuery
-          .toLowerCase()
-          .split(' ')
-          .every((v) => item.title.toLowerCase().includes(v))
-
-        const categoryMatches =
-          item.category.toLowerCase() === this.categoryQuery.toLowerCase() ||
-          this.categoryQuery === ''
-
-        return this.searchQuery || this.categoryQuery
-          ? titleContainsKeywords && categoryMatches
-          : true
-      })
-    },
+      ]
+      this.loading = false
+    }, 5000)
   },
 }
 </script>
