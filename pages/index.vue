@@ -29,7 +29,7 @@
               <li>
                 <button
                   class="dropdown-item py-1 px-3"
-                  @click="categoryQuery = 'Hard'"
+                  @click="categoryQuery = 'hard'"
                 >
                   Hard
                 </button>
@@ -37,7 +37,7 @@
               <li>
                 <button
                   class="dropdown-item py-1 px-3"
-                  @click="categoryQuery = 'Medium'"
+                  @click="categoryQuery = 'medium'"
                 >
                   Medium
                 </button>
@@ -45,7 +45,7 @@
               <li>
                 <button
                   class="dropdown-item py-1 px-3"
-                  @click="categoryQuery = 'Eazy'"
+                  @click="categoryQuery = 'eazy'"
                 >
                   Eazy
                 </button>
@@ -73,22 +73,7 @@
           </div>
         </div>
       </div>
-      <!-- Tasks -->
-      <div v-if="loading" class="text-center m-5">
-        <div class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-      </div>
 
-      <div v-else class="list-task row">
-        <CardItem
-          v-for="(item, i) in resultQuery"
-          :key="i"
-          :task="item"
-          :isGrid="isGrid"
-        />
-      </div>
-      <!-- Tasks -->
       <div class="action py-2">
         <a
           v-if="!isCreating"
@@ -98,31 +83,70 @@
           >Add Task</a
         >
         <div v-else class="add-card">
-          <div class="card mb-2">
-            <div class="card-body d-flex flex-column p-0">
-              <input
-                class="form-control border-0 mb-2"
-                placeholder="Title"
-                type="text"
-              />
-              <textarea
-                class="form-control border-0 small"
-                placeholder="Description"
-                rows="3"
-              ></textarea>
+          <form v-on:submit.prevent="handleSubmit">
+            <div class="mb-2">
+              <div class="d-flex flex-column p-0">
+                <div class="mb-3">
+                  <label class="form-label">Title</label>
+                  <input
+                    v-model="form.title"
+                    class="form-control mb-2"
+                    placeholder="Title"
+                    type="text"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Deskripsi</label>
+                  <textarea
+                    v-model="form.description"
+                    class="form-control small"
+                    placeholder="description"
+                    rows="3"
+                  ></textarea>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Category</label>
+                  <select v-model="form.category" class="form-select">
+                    <option disabled value="">Nothing selected</option>
+                    <option
+                      v-for="(option, i) in options.categories"
+                      :key="i"
+                      :value="option.value"
+                    >
+                      {{ option.text }}
+                    </option>
+                  </select>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="button-wrapper d-flex">
-            <button class="btn btn-primary me-2">Save</button>
-            <button
-              class="btn btn-outline-secondary"
-              @click="isCreating = !isCreating"
-            >
-              Cancel
-            </button>
-          </div>
+            <div class="button-wrapper d-flex">
+              <button class="btn btn-primary me-2">Save</button>
+              <button
+                class="btn btn-outline-secondary"
+                @click="isCreating = !isCreating"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
       </div>
+
+      <!-- Tasks -->
+      <div v-if="loading" class="text-center m-5">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <div v-else class="list-task row">
+        <CardItem
+          v-for="(item, i) in resultQuery"
+          :key="i"
+          :task="item"
+          :isGrid="isGrid"
+        />
+      </div>
+      <!-- End Tasks -->
     </div>
   </div>
 </template>
@@ -139,6 +163,19 @@ export default {
   data() {
     return {
       tasks: [],
+      form: {
+        title: '',
+        description: '',
+        isDone: false,
+        category: '',
+      },
+      options: {
+        categories: [
+          { value: 'hard', text: 'HARD' },
+          { value: 'medium', text: 'MEDIUM' },
+          { value: 'eazy', text: 'EAZY' },
+        ],
+      },
       isCreating: false,
       isGrid: false,
       searchQuery: '',
@@ -174,41 +211,31 @@ export default {
           title: 'Task 1',
           description: 'ini deskripsi 1',
           isDone: false,
-          category: 'Hard',
+          category: 'hard',
         },
         {
           title: 'Task 2',
           description: 'ini deskripsi 2',
           isDone: false,
-          category: 'Medium',
+          category: 'medium',
         },
         {
           title: 'Task 3',
           description: 'ini deskripsi 3',
           isDone: false,
-          category: 'Eazy',
-        },
-        {
-          title: 'Task 4',
-          description: 'ini deskripsi 4',
-          isDone: false,
-          category: 'Medium',
-        },
-        {
-          title: 'Task 5',
-          description: 'ini deskripsi 5',
-          isDone: false,
-          category: 'Eazy',
-        },
-        {
-          title: 'Task 6',
-          description: 'ini deskripsi 6',
-          isDone: false,
-          category: 'Hard',
+          category: 'eazy',
         },
       ]
       this.loading = false
-    }, 5000)
+    }, 2000)
+  },
+  methods: {
+    handleSubmit() {
+      const item = {
+        form: { ...this.form },
+      }
+      this.tasks.unshift(item.form)
+    },
   },
 }
 </script>
